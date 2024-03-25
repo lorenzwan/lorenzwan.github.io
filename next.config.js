@@ -3,15 +3,4 @@ const withNextra = require('nextra')({
   themeConfig: './theme.config.tsx',
 })
 
-module.exports = withNextra({
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'raw.githubusercontent.com',
-        port: '',
-        pathname: '/lorenzwan/**',
-      },
-    ],
-  },
-})
+module.exports = withNextra()
