@@ -4,9 +4,14 @@ const withNextra = require('nextra')({
 })
 
 module.exports = withNextra({
-  output: 'export',
   images: {
-    unoptimized: true
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'raw.githubusercontent.com',
+        port: '',
+        pathname: '/lorenzwan/**',
+      },
+    ],
   },
-  }
-)
+})
