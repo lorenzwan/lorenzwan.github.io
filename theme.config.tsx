@@ -10,11 +10,11 @@ const config: DocsThemeConfig = {
   },
   head: (
     <>
-      <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/lorenzwan/media_src/e4f517f3f39b6ebc8b700060fa035c5df713db88/images/favicon.ico"/>
+      <link rel="icon" type="image/x-icon" href="/images/favicon.ico"/>
     </>
   ),
   logo: <>
-    <Image src='https://raw.githubusercontent.com/lorenzwan/media_src/main/images/logoClean.png' width={30} height={30} alt='Lorenz Wan | Rigger'/>
+    <Image src='/images/logoClean.png' width={30} height={30} alt='Lorenz Wan'/>
     <span style={{marginLeft: '.6em', fontWeight: 500}}>
       Lorenz Wan
     </span>
