@@ -7,7 +7,7 @@
    - Create following files, details in https://nextra.site/docs/docs-theme/start
      - `package.json`
      - `next.config.js`
-       - Enable a static export, details in https://nextjs.org/docs/app/building-your-application/deploying/static-exports
+       - Enable a **static export**, details in https://nextjs.org/docs/app/building-your-application/deploying/static-exports
        - `output: "export"`
        - `images: {unoptimized: true}`
      - `theme.config.jsx`
@@ -19,8 +19,10 @@
    - Remove following codes from `nextjs.yml`
      - `name: Static HTML export with Next.js`
      - `run: ${{ steps.detect-package-manager.outputs.runner }} next export`
-     - since static export is enabled in `next.config.js`
+     - since **static export** is enabled in `next.config.js`
 4. Handy commands
+   - Update `npm update`
    - Build `npm run build`
-   - Test locally `npx serve ./out`
+   - Test `npm run dev` (Development Mode) / `npx serve@latest ./out` (Production Mode)
+      - `npm run start` (Production Mode) **doesn't** work with static export
    - `git reset` / Revert to previous commit `git reset --soft HEAD~`
