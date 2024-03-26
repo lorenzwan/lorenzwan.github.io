@@ -15,12 +15,11 @@
    - Create a .gitignore
    - Commit & Push
 3. Go to Repository settings > Pages > Build and deployment
-   - GitHub Actions
-   - Next.js > Configure
+   - GitHub Actions > Next.js > Configure
    - Remove following codes from `nextjs.yml`
      - `name: Static HTML export with Next.js`
      - `run: ${{ steps.detect-package-manager.outputs.runner }} next export`
-     - since we enabled static export in `next.config.js`
+     - since static export is enabled in `next.config.js`
 4. Handy commands
    - Build `npm run build`
    - Test locally `npx serve ./out`
