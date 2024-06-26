@@ -6,7 +6,7 @@ export function VimeoIFrame({ id }) {
 
   return (
     <div className={styles.videoContainer}>
-      <iframe className={styles.frame} src={link.replace("__id__", id)} frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
+      <iframe className={styles.frame} src={link.replace("__id__", id)} frameBorder="0" allow="autoplay; fullscreen; picture-in-picture" allowFullScreen></iframe>
     </div>
   )
 }
@@ -14,7 +14,7 @@ export function VimeoIFrame({ id }) {
 export function PdfIFrame({ path }) {
   return (
     <div className={styles.pdfContainer}>
-      <iframe className={styles.frame} src={path} frameborder="0"></iframe>
+      <iframe className={styles.frame} src={path} frameBorder="0"></iframe>
     </div>
   )
 }
