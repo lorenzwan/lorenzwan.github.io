@@ -22,7 +22,7 @@
      - since **static export** is enabled in `next.config.js`
 4. Handy commands
    - Update `npm update`
-   - Build `npm run build`
-   - Test `npm run dev` (Development Mode) / `npx serve@latest ./out` (Production Mode)
+   - Test `npm run dev` (Development Mode)
+   - Build `npm run build`, then test `npx serve@latest ./out` (Production Mode)
       - `npm run start` (Production Mode) **doesn't** work with static export
    - `git reset` / Revert to previous commit `git reset --soft HEAD~`
