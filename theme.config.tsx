@@ -1,18 +1,25 @@
 import React from 'react'
 import { DocsThemeConfig } from 'nextra-theme-docs'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 
 const config: DocsThemeConfig = {
   useNextSeoProps() {
+    const { asPath } = useRouter()
+    if (asPath == '/') {
+      return {
+        titleTemplate: 'Lorenz Wan - Home'
+      }
+    }
     return {
       titleTemplate: 'Lorenz Wan - %s'
     }
   },
-  head: (
-    <>
+  head: <>
       <link rel="icon" type="image/x-icon" href="/images/favicon.ico"/>
-    </>
-  ),
+      <meta property="og:title" content="Lorenz Wan"/>
+      <meta property="og:description" content="A portfolio website as well as a documatation for myself." />
+    </>,
   logo: <>
     <Image src='/images/logoClean.png' width={30} height={30} alt='Lorenz Wan'/>
     <span style={{marginLeft: '.6em', fontWeight: 500}}>
@@ -36,9 +43,15 @@ const config: DocsThemeConfig = {
       />
       <title>Linkedin</title>
     </svg>
-    )
+    ),
   },
-  docsRepositoryBase: 'https://github.com/lorenzwan/documentation-starter-kit/tree/main',
+  search: {
+    placeholder: 'Search or jump to...',
+  },
+  sidebar: {
+    toggleButton: true,
+  },
+  docsRepositoryBase: 'https://github.com/lorenzwan/lorenzwan.github.io/tree/main/pages',
   feedback: {
     content: null,
   },
