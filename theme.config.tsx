@@ -1,18 +1,18 @@
-import React from 'react'
-import { DocsThemeConfig } from 'nextra-theme-docs'
-import Image from 'next/image'
-import { useRouter } from 'next/router'
+import React from "react"
+import { DocsThemeConfig } from "nextra-theme-docs"
+import Image from "next/image"
+import { useRouter } from "next/router"
 
 const config: DocsThemeConfig = {
   useNextSeoProps() {
     const { asPath } = useRouter()
-    if (asPath == '/') {
+    if (asPath == "/") {
       return {
-        titleTemplate: 'Lorenz Wan - Home'
+        titleTemplate: "Lorenz Wan - Home"
       }
     }
     return {
-      titleTemplate: 'Lorenz Wan - %s'
+      titleTemplate: "Lorenz Wan - %s"
     }
   },
   head: <>
@@ -21,8 +21,8 @@ const config: DocsThemeConfig = {
       <meta property="og:description" content="A portfolio website as well as a documatation for myself." />
     </>,
   logo: <>
-    <Image src='/images/logoClean.png' width={30} height={30} alt='Lorenz Wan'/>
-    <span style={{marginLeft: '.6em', fontWeight: 500}}>
+    <Image src="/images/logoClean.png" width={30} height={30} alt="Lorenz Wan"/>
+    <span style={{marginLeft: ".6em", fontWeight: 500}}>
       Lorenz Wan
     </span>
   </>,
@@ -31,10 +31,10 @@ const config: DocsThemeConfig = {
     light: 32,
   },
   project: {
-    link: 'https://github.com/lorenzwan',
+    link: "https://github.com/lorenzwan",
   },
   chat: {
-    link: 'https://www.linkedin.com/in/lorenzwan',
+    link: "https://www.linkedin.com/in/lorenzwan",
     icon: (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
       <path
@@ -46,12 +46,12 @@ const config: DocsThemeConfig = {
     ),
   },
   search: {
-    placeholder: 'Search or jump to...',
+    placeholder: "Search or jump to...",
   },
   sidebar: {
     toggleButton: true,
   },
-  docsRepositoryBase: 'https://github.com/lorenzwan/lorenzwan.github.io/tree/main/pages',
+  docsRepositoryBase: "https://github.com/lorenzwan/lorenzwan.github.io/tree/main/pages",
   feedback: {
     content: null,
   },
@@ -64,7 +64,7 @@ const config: DocsThemeConfig = {
   gitTimestamp: null,
   navigation: false,
   footer: {
-    text: '© 2016-Present Lorenz Wan - All Rights Reserved.',
+    text: "© 2016-Present Lorenz Wan - All Rights Reserved.",
   },
 }
 
