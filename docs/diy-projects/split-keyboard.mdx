@@ -1,0 +1,82 @@
+---
+sidebar_position: 1
+title: "Split Keyboard"
+description: "A guide to build a manuform split keyboard by using RP2040 microcontroller and QMK firmware."
+tags:
+  - "qmk"
+  - "vial-kb"
+  - "dactyl-manuform"
+  - "Cosmos-Keyboards"
+---
+
+:::warning
+This page is under construction...
+:::
+
+## Overview
+
+Building a split keyboard for work so I can move the Kinesis Advantage2 to the PC. I prefer 80%-100% keyboard but Kinesis Advantage360 Professional is too pricy.
+
+## Tools
+
+| Item | Notes |
+| :- | :- |
+| 3D printer | Print the cases |
+| Multimeter | Test connections |
+| Soldering kit |  |
+| Wire stripper | Make dupont connectors |
+| Crimping tool kit | Same as above |
+| Jewelry Plier | Bend the diodes |
+| Hot Glue | Hold stuff in place |
+| Isopropyl Alcohol | >70%, undo the hot glue |
+
+## Parts
+
+**Bold** items are what I use for this project
+
+| Item | QTY | Notes |
+| :- | :-: | :- |
+| Cases | 2 |  |
+| Microcontrollers | 2 | **Adafruit KB2040**, Raspberry Pi Pico RP2040, or Arduino Pro Micro |
+| Purple Squishies | 2 | Wrist rest |
+| PJ-320A TRRS connector | 2 | Connect two halves |
+| TRRS Cable  | 1 | **UGREEN** seems fine |
+| Type C Cable | 1 | Same as above |
+| Keyboard switch | 88 | **Cherry MX Silent Red** or other MX-Compatible switches |
+| Keycap | 88 | **DSA profile** or any uniform profiles are recommended |
+| 1N4148 Diodes | 88 | Get some extra just in case | 
+| 24 Gauge Stranded Wire | - | Colored would be helpful |
+| Dupont 2.54mm Connector Kit | - |  |
+| M3 Flat Head Screws | 16 |  |
+| M3 Heat Set Threaded Inserts | 16 |  |
+| Rubber Feet | 16 |  |
+
+## Steps
+
+### Make & Print Cases
+
+I used [Cosmos Keyboard Generator](https://ryanis.cool/cosmos/beta#cf) and edit it in Houdini.
+
+### Wire Everything
+
+It took me 10 hours in total since I'm not good at soldering. I solder things better and faster after this.
+
+#### Plan Matrix
+
+#### Bend Diodes
+
+#### Strip Wires
+
+### Build QMK Firmware
+
+Hardware is done, it's time for the software.
+
+#### Setup Environment
+
+#### Define Keyboard
+
+#### Define Keymap
+
+#### Flash it
+
+#### Add Vial QMK

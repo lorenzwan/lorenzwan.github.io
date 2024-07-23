@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /assets/
+Disallow: /fonts/
+Disallow: /search/
+Disallow: /tags/
+
+Sitemap: https://lorenzwan.com/sitemap.xml
