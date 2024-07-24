@@ -56,3 +56,9 @@ html[data-theme='dark'] {
 .navbar-sidebar__back {
   display: none;
 }
+
+.sidebar-divider {
+  margin-top: 7px;
+  border-top: 1px solid;
+  height: 3px;
+}
