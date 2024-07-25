@@ -10,8 +10,11 @@
   src: url("/fonts/JetBrainsMono-Regular.woff2") format("woff2");
 }
 
+* {
+  font-family: "JetBrainsMono", sans-serif !important;
+}
+
 :root {
-  --ifm-font-family-base: "JetBrainsMono", sans-serif;
   --ifm-color-primary: #995e00;
   --ifm-color-primary-dark: #8a5500;
   --ifm-color-primary-darker: #825000;
@@ -49,16 +52,50 @@ html[data-theme='dark'] {
   --ifm-hover-overlay: #462E08;
 }
 
-.prism-code {
-  font-family: "JetBrainsMono", sans-serif;
-}
-
 .navbar-sidebar__back {
   display: none;
 }
 
-.sidebar-divider {
-  margin-top: 7px;
-  border-top: 1px solid;
-  height: 3px;
+.navbar-linkedin-link {
+  width: 26px;
+  height: 26px;
+  display: flex;
+  background-color: var(--ifm-navbar-link-color);
+  mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 97.75 97.75' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M48.875,0C21.882,0,0,21.882,0,48.875S21.882,97.75,48.875,97.75S97.75,75.868,97.75,48.875S75.868,0,48.875,0zM30.562,81.966h-13.74V37.758h13.74V81.966z M23.695,31.715c-4.404,0-7.969-3.57-7.969-7.968c0.001-4.394,3.565-7.964,7.969-7.964c4.392,0,7.962,3.57,7.962,7.964C31.657,28.146,28.086,31.715,23.695,31.715z M82.023,81.966H68.294V60.467c0-5.127-0.095-11.721-7.142-11.721c-7.146,0-8.245,5.584-8.245,11.35v21.869H39.179V37.758h13.178v6.041h0.185c1.835-3.476,6.315-7.14,13-7.14c13.913,0,16.481,9.156,16.481,21.059V81.966z'/%3E%3C/svg%3E");
+  transition: background-color var(--ifm-transition-fast)
+    var(--ifm-transition-timing-default);
+  margin: var(--ifm-navbar-item-padding-vertical) calc(var(--ifm-navbar-item-padding-horizontal) * 0.5);
+}
+
+.navbar-linkedin-link:hover {
+  background-color: var(--ifm-navbar-link-hover-color);
+}
+
+.navbar-github-link {
+  width: 26px;
+  height: 26px;
+  display: flex;
+  background-color: var(--ifm-navbar-link-color);
+  mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M128.001 0C57.317 0 0 57.307 0 128.001c0 56.554 36.676 104.535 87.535 121.396 6.397 1.185 8.746-2.777 8.746-6.158 0-3.052-.12-13.135-.174-23.83-35.61 7.742-43.124-15.103-43.124-15.103-5.823-14.795-14.213-18.73-14.213-18.73-11.613-7.944.876-7.78.876-7.78 12.853.902 19.621 13.19 19.621 13.19 11.3917 19.568 29.945 13.911 37.249 10.64 1.149-8.272 4.466-13.92 8.127-17.116-28.431-3.236-58.318-14.212-58.318-63.258 0-13.975 5-25.394 13.188-34.358-1.329-3.224-5.71-16.242 1.24-33.874 0 0 10.749-3.44 35.21 13.121 10.21-2.836 21.16-4.258 32.038-4.307 10.878.049 21.837 1.397 32.066 4.307 24.431-16.56 35.165-13.12 35.165-13.12 6.967 17.63 2.584 30.65 1.255 33.873 8.207 8.964 13.173 20.383 13.173 34.358 0 49.163-29.944 59.988-58.447 63.157 4.591 3.972 8.682 11.762 8.682 23.704 0 17.126-.148 30.91-.148 35.126 0 3.407 2.304 7.398 8.792 6.14C219.37 232.5 256 184.537 256 128.002 256 57.307 198.691 0 128.001 0Zm-80.06 182.34c-.282.636-1.283.827-2.194.39-.929-.417-1.395-1.284-1.15-1.922.276-.655 1.279-.838 2.205-.399.93.418 1.396 1.293 1.139 1.931Zm6.296 5.618c-.61.566-1.804.303-2.614-.591-.837-.892-.994-2.086-.375-2.66.63-.566 1.787-.301 2.626.591.838.903 1 2.088.363 2.66Zm4.32 7.188c-.785.545-2.067.034-2.86-1.104-.784-1.138-.784-2.503.017-3.05.795-.547 2.058-.055 2.861 1.075.782 1.157.782 2.522-.019 3.08Zm7.304 8.325c-.701.774-2.196.566-3.29-.49-1.119-1.032-1.393-2.496-.726-3.27.71-.776 2.213-.558 3.315.49 1.11 1.03 1.395 2.505.701 3.27Zm9.442 2.81c-.31 1.003-1.75 1.3959-3.199 1.033-1.3948-.439-2.395-1.613-2.103-2.626.301-1.01 1.747-1.3984 3.207-1.028 1.3946.436 2.396 1.602 2.095 2.622Zm10.744 1.193c.036 1.055-1.193 1.93-2.715 1.95-1.53.034-2.769-.82-2.786-1.86 0-1.065 1.202-1.932 2.733-1.958 1.522-.03 2.768.818 2.768 1.868Zm10.555-.405c.182 1.03-.875 2.088-2.387 2.37-1.3985.271-2.861-.365-3.05-1.396-.184-1.056.893-2.114 2.376-2.387 1.514-.263 2.868.356 3.061 1.3903Z'/%3E%3C/svg%3E");
+  transition: background-color var(--ifm-transition-fast)
+    var(--ifm-transition-timing-default);
+  margin: var(--ifm-navbar-item-padding-vertical) calc(var(--ifm-navbar-item-padding-horizontal) * 0.5);
+}
+
+.navbar-github-link:hover {
+  background-color: var(--ifm-navbar-link-hover-color);
+}
+
+.navbar__search {
+  margin-left: 0px !important;
+}
+
+/* mobile view */
+@media (max-width: 996px) {
+  .navbar__item {
+    display: flex !important;
+  }
+  .navbar__search-input {
+    width: 10.75rem;
+  }
 }

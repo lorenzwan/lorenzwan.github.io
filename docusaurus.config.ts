@@ -1,6 +1,8 @@
-import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
+
+import MyPrismLight from './src/theme/myPrismLight';
+import MyPrismDark from './src/theme/myPrismDark';
 
 const config: Config = {
   title: 'Lorenz Wan',
@@ -48,8 +50,9 @@ const config: Config = {
       {
         pages: false,
         docs: {
-          sidebarPath: './sidebars.ts',
           routeBasePath: '/',
+          sidebarPath: './sidebars.ts',
+          sidebarCollapsed: false,
         },
         blog: false,
         theme: {
@@ -89,7 +92,24 @@ const config: Config = {
           type: 'search',
           position: 'right',
         },
+        {
+          href: 'https://www.linkedin.com/in/lorenzwan/',
+          position: 'right',
+          className: 'navbar-linkedin-link',
+          'aria-label': 'LinkedIn',
+        },
+        {
+          href: 'https://github.com/lorenzwan',
+          position: 'right',
+          className: 'navbar-github-link',
+          'aria-label': 'GitHub repository',
+        },
       ],
+    },
+    docs: {
+      sidebar: {
+        hideable: true,
+      },
     },
     footer: {
       links: [
@@ -97,8 +117,8 @@ const config: Config = {
       copyright: `Copyright © 2016-${new Date().getFullYear()} Lorenz Wan - All Rights Reserved.`,
     },
     prism: {
-      theme: prismThemes.vsLight,
-      darkTheme: prismThemes.vsDark,
+      theme: MyPrismLight,
+      darkTheme: MyPrismDark,
       additionalLanguages: ['powershell'],
     },
   } satisfies Preset.ThemeConfig,

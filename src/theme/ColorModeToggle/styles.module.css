@@ -1,0 +1,12 @@
+.color_mode_toggle_styles {
+  margin: var(--ifm-navbar-item-padding-vertical)
+    calc(var(--ifm-navbar-item-padding-horizontal) * 0.1)
+    var(--ifm-navbar-item-padding-vertical)
+    calc(var(--ifm-navbar-item-padding-horizontal) * 0.35);
+}
+
+@media (max-width: 996px) {
+  .color_mode_toggle_styles {
+    display: none;
+  }
+}
