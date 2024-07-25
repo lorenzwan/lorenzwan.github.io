@@ -7,6 +7,6 @@
 
 @media (max-width: 996px) {
   .color_mode_toggle_styles {
-    display: none;
+    margin: 0 0;
   }
 }
