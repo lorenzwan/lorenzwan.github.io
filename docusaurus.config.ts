@@ -42,6 +42,36 @@ const config: Config = {
         crossorigin: 'anonymous',
       },
     },
+    {
+      tagName: 'link',
+      attributes: {
+        rel: 'preload',
+        href: '/fonts/JetBrainsMono-Italic.woff2',
+        as: 'font',
+        type: 'font/woff2',
+        crossorigin: 'anonymous',
+      },
+    },
+    {
+      tagName: 'link',
+      attributes: {
+        rel: 'preload',
+        href: '/fonts/JetBrainsMono-ExtraBold.woff2',
+        as: 'font',
+        type: 'font/woff2',
+        crossorigin: 'anonymous',
+      },
+    },
+    {
+      tagName: 'link',
+      attributes: {
+        rel: 'preload',
+        href: '/fonts/JetBrainsMono-ExtraBoldItalic.woff2',
+        as: 'font',
+        type: 'font/woff2',
+        crossorigin: 'anonymous',
+      },
+    },
   ],
 
   presets: [
@@ -53,6 +83,7 @@ const config: Config = {
           routeBasePath: '/',
           sidebarPath: './sidebars.ts',
           sidebarCollapsed: false,
+          showLastUpdateTime: true,
         },
         blog: false,
         theme: {
@@ -96,13 +127,15 @@ const config: Config = {
           href: 'https://www.linkedin.com/in/lorenzwan/',
           position: 'right',
           className: 'navbar-linkedin-link',
+          title: 'LinkedIn',
           'aria-label': 'LinkedIn',
         },
         {
           href: 'https://github.com/lorenzwan',
           position: 'right',
           className: 'navbar-github-link',
-          'aria-label': 'GitHub repository',
+          title: 'GitHub',
+          'aria-label': 'GitHub',
         },
       ],
     },
