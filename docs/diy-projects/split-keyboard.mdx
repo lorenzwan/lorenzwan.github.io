@@ -21,14 +21,14 @@ This page is under construction...
 Building a split keyboard for work so I can move the Kinesis Advantage2 to the PC. I prefer 80%-100% keyboard but Kinesis Advantage360 Professional is too pricy.
 Here is how I build a manuform split keyboard by using RP2040 microcontroller and QMK firmware.
 
-### Final product
+### Final Product
 
 ![Front](/img/diy-projects/split-keyboard/front.jpg)
 ![Back](/img/diy-projects/split-keyboard/back.jpg)
 
-### Side by side
+### Side by Side
 
-![Side by side](/img/diy-projects/split-keyboard/side-by-side.jpg)
+![Side by Side](/img/diy-projects/split-keyboard/side-by-side.jpg)
 
 ## Tools
 
@@ -71,8 +71,11 @@ Here is how I build a manuform split keyboard by using RP2040 microcontroller an
 I used [Cosmos Keyboard Generator](https://ryanis.cool/cosmos/beta#cf) and edit it in Houdini.
 The generator is in beta when I use it. It might take some time to achieve a nice-looking shape without any intersections.
 
-![Cosmos settings](/img/diy-projects/split-keyboard/cosmos_settings.png)
+![Cosmos Settings](/img/diy-projects/split-keyboard/cosmos-settings.png)
+
 I settled down with these settings, 6 keys on the thumb cluster like the Advantage2, extra row on top for function keys, extra coloumn for the index.
+
+![Base Plate](/img/diy-projects/split-keyboard/base-plate.png)
 
 I combined the microcontroller holder with the base plate to create a stronger structure.
 Instead of using the wrist rest from the generator, I modeled a riser for the Purple Squishy that came with the mattress.
@@ -81,20 +84,29 @@ Instead of using the wrist rest from the generator, I modeled a riser for the Pu
 
 It took me about 10 hours in total because I’m not good at soldering, but I got better and faster at it afterward.
 
-#### Plan Matrix and Pins
+#### Plan Matrix & Pins
 
-I can plan the matrix however I want within the limited pinout on the microcontroller.
 A well-thought-out matrix can make my life easier when it comes to soldering and debugging.
 
 Let's look at the pins on the board I'm using. The KB2040 is an Arduino Pro Micro-shaped Pi Pico with a Type C connector, a reset button, and a bootloader button.
 
-![KB2040 pinout](/img/diy-projects/split-keyboard/KB2040_pinout.png)
+![KB2040 Pinout](/img/diy-projects/split-keyboard/KB2040_pinout.png)[^1]
 
-I decide to use USART Full-duplex[^1] driver for the split keyboard, which requires an I<sup>2</sup>C connection [^2].
+I picked USART Full-duplex[^2] driver because it's the fastest and the most efficient. It requires an I<sup>2</sup>C connection[^3].
 Since the TRRS connectors are next to the board, it makes sense to use the `GPIO0` and `GPIO1` for the `TX` and `RX`.
+Well, we have 16 pins left. 
 
-Well, we have 16 pins left. Technically, I can do a 8x8 for each side with this board, which would be 128 keys total!
-That’s too many keys for a split keyboard and too many keys to solder. Based on my 3d printed case, I can fit 44 keys in a 7x7 matrix per side.
+![Matrix](/img/diy-projects/split-keyboard/matrix.png)
+
+This is the final matrix after some drafts.
+
+The `row` is straight forward.
+I just connect most of the keys horizontally, and add a `row` for those 1u keys on the thumb cluster.
+Then, connect those `rows` to the `GPIO` on the right side of the board from top to bottom.
+
+For the `coloumns`, I unfold the thumb cluster so I can fit them into row `5` and `6`.
+Make sure the `coloumns` go in one direction, so that `Esc` is `[0, 0]` and `F7` is `[7, 0]` in the matrix.
+It would make more sense when we do the keymapping. Then, connect those `coloumns` to the `GPIO` on the left side of the board from top to bottom.
 
 #### Bend Diodes
 
@@ -110,13 +122,14 @@ Hardware is done, it's time for the software.
 
 #### Define Keymap
 
-#### Flash it
+#### Flash Firmware
 
-#### Add Vial QMK
+#### [Optional] Add Vial QMK
 
 <br/>
 
 ---
 
-[^1]: ['serial' Driver | QMK Firmware](https://docs.qmk.fm/drivers/serial#usart-full-duplex)
-[^2]: [Split Keyboard | QMK Firmware](https://docs.qmk.fm/features/split_keyboard#i2c-wiring)
+[^1]: [Overview | Adafruit KB2040 | Adafruit Learning System](https://learn.adafruit.com/adafruit-kb2040?view=all)
+[^2]: ['serial' Driver | QMK Firmware](https://docs.qmk.fm/drivers/serial#usart-full-duplex)
+[^3]: [Split Keyboard | QMK Firmware](https://docs.qmk.fm/features/split_keyboard#i2c-wiring)
