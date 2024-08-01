@@ -35,14 +35,15 @@
 }
 
 :root {
-  --ifm-color-primary: #995e00;
-  --ifm-color-primary-dark: #8a5500;
-  --ifm-color-primary-darker: #825000;
-  --ifm-color-primary-darkest: #6b4200;
-  --ifm-color-primary-light: #a86700;
-  --ifm-color-primary-lighter: #b06c00;
-  --ifm-color-primary-lightest: #c77a00;
+  --ifm-color-primary: #a36500;
+  --ifm-color-primary-dark: #935b00;
+  --ifm-color-primary-darker: #8b5600;
+  --ifm-color-primary-darkest: #724700;
+  --ifm-color-primary-light: #b36f00;
+  --ifm-color-primary-lighter: #bb7400;
+  --ifm-color-primary-lightest: #d48300;
   --ifm-code-font-size: 92%;
+  --ifm-heading-color: var(--ifm-color-primary);
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
 }
 
@@ -51,7 +52,7 @@
   --ifm-background-surface-color: #ffffff;
   --ifm-footer-background-color: var(--ifm-background-surface-color);
   --ifm-hover-overlay: #fcefda;
-  --ifm-menu-color: var(--ifm-font-color-base);
+  --ifm-color-content-secondary: var(--ifm-color-emphasis-800);
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
@@ -72,6 +73,8 @@ html[data-theme='dark'] {
   --ifm-background-surface-color: #222222;
   --ifm-footer-background-color: var(--ifm-background-surface-color);
   --ifm-hover-overlay: #462E08;
+  --ifm-color-content: var(--ifm-color-emphasis-900);
+  --ifm-color-content-secondary: var(--ifm-color-emphasis-800);
 }
 
 .navbar-sidebar__back {

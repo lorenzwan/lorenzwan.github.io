@@ -147,7 +147,7 @@ const config: Config = {
     footer: {
       links: [
       ],
-      copyright: `Copyright © 2016-${new Date().getFullYear()} Lorenz Wan - All Rights Reserved.`,
+      copyright: `© 2016-${new Date().getFullYear()} Lorenz Wan. All Rights Reserved.`,
     },
     prism: {
       theme: MyPrismLight,
