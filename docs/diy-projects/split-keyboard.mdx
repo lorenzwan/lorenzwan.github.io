@@ -10,12 +10,6 @@ tags:
   - "Cosmos-Keyboards"
 ---
 
-:::warning
-
-This page is under construction...
-
-:::
-
 ## Overview
 
 Building a split keyboard for work so I can move the Kinesis Advantage2 to the PC. I prefer 80%-100% keyboard but Kinesis Advantage360 Professional is too pricy.
@@ -37,7 +31,7 @@ Here is how I build a manuform split keyboard by using RP2040 microcontroller an
 | 3D Printer | Print the cases |
 | Multimeter | Test connections |
 | Soldering Kit |  |
-| Wire Stripper | Make dupont connectors |
+| Wire Stripper | Make DuPont connectors |
 | Crimping Tool Kit | Same as above |
 | Jewelry Plier | Bend the diodes |
 | Hot Glue | Hold stuff in place |
@@ -59,14 +53,14 @@ Here is how I build a manuform split keyboard by using RP2040 microcontroller an
 | Keycaps | 88 | **DSA profile** or any uniform profiles are recommended |
 | 1N4148 Diodes | 88 | Get some extra just in case | 
 | 24 Gauge Stranded Wire | - | Colored would be helpful |
-| Dupont 2.54mm Connector Kit | - |  |
+| DuPont 2.54mm Connector Kit | - |  |
 | M3 Flat Head Screws | 16 |  |
 | M3 Heat Set Threaded Inserts | 16 |  |
 | Rubber Feet | 16 |  |
 
 ## Steps
 
-### Make & Print Cases
+### Making & Print Cases
 
 I used [Cosmos Keyboard Generator](https://ryanis.cool/cosmos/beta#cf) and edit it in Houdini.
 The generator is in beta when I use it. It might take some time to achieve a nice-looking shape without any intersections.
@@ -80,11 +74,11 @@ I settled down with these settings, 6 keys on the thumb cluster like the Advanta
 I combined the microcontroller holder with the base plate to create a stronger structure.
 Instead of using the wrist rest from the generator, I modeled a riser for the Purple Squishy that came with the mattress.
 
-### Wire Everything
+### Wiring Everything
 
 It took me about 10 hours in total because I’m not good at soldering, but I got better and faster at it afterward.
 
-#### Plan Matrix & Pins
+#### Planning Matrix & Pins
 
 A well-thought-out matrix can make my life easier when it comes to soldering and debugging.
 
@@ -98,33 +92,766 @@ Well, we have 16 pins left.
 
 ![Matrix](/img/diy-projects/split-keyboard/matrix.png)
 
-This is the final matrix after some drafts.
+This is the final matrix after several drafts.
 
-The `row` is straight forward.
-I just connect most of the keys horizontally, and add a `row` for those 1u keys on the thumb cluster.
-Then, connect those `rows` to the `GPIO` on the right side of the board from top to bottom.
+The `row` is straightforward.
+I connected most of the keys horizontally, and added a `row` specifically for those 1u keys in the thumb cluster.
+Then, I connected those `rows` to the `GPIO` on the right side of the board from top to bottom.
 
-For the `coloumns`, I unfold the thumb cluster so I can fit them into row `5` and `6`.
-Make sure the `coloumns` go in one direction, so that `Esc` is `[0, 0]` and `F7` is `[7, 0]` in the matrix.
-It would make more sense when we do the keymapping. Then, connect those `coloumns` to the `GPIO` on the left side of the board from top to bottom.
+For the `coloumns`, I unfolded the thumb cluster so I can fit them into rows `5` and `6`.
+It’s essential to ensure that the `columns` follow a consistent direction, so that `Esc` is `[0, 0]` and `F7` is `[7, 0]` in the matrix.
+It would make more sense when we map the keys. Then, I connected those `coloumns` to the `GPIO` on the left side of the board from top to bottom.
 
-#### Bend Diodes
+There are many ways to wire the matrix.[^4] I bent the legs of the diodes for the `rows` and stripped the wires for `coloumns`.
+Why? Saving some wires and fewer soldering for the `row`; no extra materials (e.g. kapton tape) for the `coloumns`.
 
-#### Strip Wires
+#### Bending Diodes
+
+First, let’s discuss why we need diodes. Diodes allow electricity to flow in one direction,
+which prevents the keyboard from registering unintended key presses when multiple keys are pressed simultaneously.
+
+![Current Flow](/img/diy-projects/split-keyboard/current-flow.png)[^5]
+
+The direction of the diode matters. The black band on the diode indicates the direction of the flow.
+To ensure proper functionality, position the diode so that the black band is always away from the switches.
+
+While bending the diodes is not strictly necessary, doing so can make soldering easier and create a stronger connection.
+
+![Bending Diodes](/img/diy-projects/split-keyboard/bending-diodes.png)
+
+Ta-da, the diode is now sitting on the switches with no extra hand.
+The diode leg can be bent in either direction to form a `row`. Repeat this process 88 times for all the switches.
+
+#### Stripping Wires
+
+To prepare the wires, measure the total length needed, mark the segments with a marker, cut the wire, and then strip the marked segments.
+Easy but time-consuming!
+
+![Wiring Matrix](/img/diy-projects/split-keyboard/wiring-matrix.jpg)
+
+This is how the matrix looks like after hours of soldering.
+
+#### Wiring TRRS Connectors
+
+The hardware is almost ready. I have 8 solder joints left! Based on the pin configuration of the USART Full-duplex[^2],
+the left `TX` is connected to the right `RX`; the left `RX` is connect to the right `TX`.
+
+![Wiring TRRS](/img/diy-projects/split-keyboard/wiring-trrs.jpg)
+
+This is the left side of my keyboard, and I flipped the DuPont connector on the right side.
 
 ### Build QMK Firmware
 
 Hardware is done, it's time for the software.
 
-#### Setup Environment
+#### Setting Up Environment
 
-#### Define Keyboard
+Install [QMK MSYS](https://msys.qmk.fm), for more detailed info check out [Setting Up Your QMK Environment | QMK Firmware](https://docs.qmk.fm/newbs_getting_started#set-up-your-environment).
 
-#### Define Keymap
+#### Defining Keyboard
 
-#### Flash Firmware
+The QMK documentation for RP2040 and `keyboard.json` (the new version of `info.json`) can be confusing since they're are all over the place.
+[info.json Reference | QMK Firmware](https://docs.qmk.fm/reference_info_json#info-json-reference) is a great start,
+but I would recommended to check out the [keyboard.jsonschema · qmk/qmk_firmware](https://github.com/qmk/qmk_firmware/blob/master/data/schemas/keyboard.jsonschema) to see all the available settings.
 
-#### [Optional] Add Vial QMK
+Here are my keyboard configuration files and explanations of some highlighted settings.
+
+```json copy showLineNumbers title="keyboard.json"
+{
+    "manufacturer": "Lorenz Wan",
+    "keyboard_name": "LZ Manuform",
+    "maintainer": "lorenzwan",
+    // highlight-next-line
+    "development_board": "kb2040",
+    "diode_direction": "COL2ROW",
+    "features": {
+        // highlight-next-line
+        "bootmagic": true,
+        "command": false,
+        "console": false,
+        "extrakey": true,
+        "mousekey": true,
+        "nkro": true
+    },
+    "split": {
+        "enabled": true,
+        "bootmagic": {
+            // highlight-next-line
+            "matrix": [7, 6]
+        }
+    },
+    // highlight-next-line
+    "matrix_pins": {
+        "cols": ["GP2", "GP3", "GP4", "GP5", "GP6", "GP7", "GP8"],
+        "rows": ["GP29", "GP28", "GP27", "GP26", "GP18", "GP20", "GP19"]
+    },
+    "url": "",
+    "usb": {
+        "device_version": "1.0.0",
+        "pid": "0x0130",
+        "vid": "0xFADE"
+    },
+    // highlight-next-line
+    "layouts": {
+        "LAYOUT": {
+            "layout": [
+                {"matrix": [0, 0], "x": 0, "y": 0.375},
+                {"matrix": [0, 1], "x": 1, "y": 0.375},
+                {"matrix": [0, 2], "x": 2, "y": 0.125},
+                {"matrix": [0, 3], "x": 3, "y": 0},
+                {"matrix": [0, 4], "x": 4, "y": 0.125},
+                {"matrix": [0, 5], "x": 5, "y": 0.25},
+                {"matrix": [0, 6], "x": 6, "y": 0.25},
+
+                {"matrix": [7, 0], "x": 12, "y": 0.25},
+                {"matrix": [7, 1], "x": 13, "y": 0.25},
+                {"matrix": [7, 2], "x": 14, "y": 0.125},
+                {"matrix": [7, 3], "x": 15, "y": 0},
+                {"matrix": [7, 4], "x": 16, "y": 0.125},
+                {"matrix": [7, 5], "x": 17, "y": 0.375},
+                {"matrix": [7, 6], "x": 18, "y": 0.375},
+
+                {"matrix": [1, 0], "x": 0, "y": 1.375},
+                {"matrix": [1, 1], "x": 1, "y": 1.375},
+                {"matrix": [1, 2], "x": 2, "y": 1.125},
+                {"matrix": [1, 3], "x": 3, "y": 1},
+                {"matrix": [1, 4], "x": 4, "y": 1.125},
+                {"matrix": [1, 5], "x": 5, "y": 1.25},
+                {"matrix": [1, 6], "x": 6, "y": 1.25},
+
+                {"matrix": [8, 0], "x": 12, "y": 1.25},
+                {"matrix": [8, 1], "x": 13, "y": 1.25},
+                {"matrix": [8, 2], "x": 14, "y": 1.125},
+                {"matrix": [8, 3], "x": 15, "y": 1},
+                {"matrix": [8, 4], "x": 16, "y": 1.125},
+                {"matrix": [8, 5], "x": 17, "y": 1.375},
+                {"matrix": [8, 6], "x": 18, "y": 1.375},
+
+                {"matrix": [2, 0], "x": 0, "y": 2.375},
+                {"matrix": [2, 1], "x": 1, "y": 2.375},
+                {"matrix": [2, 2], "x": 2, "y": 2.125},
+                {"matrix": [2, 3], "x": 3, "y": 2},
+                {"matrix": [2, 4], "x": 4, "y": 2.125},
+                {"matrix": [2, 5], "x": 5, "y": 2.25},
+                {"matrix": [2, 6], "x": 6, "y": 2.25},
+
+                {"matrix": [9, 0], "x": 12, "y": 2.25},
+                {"matrix": [9, 1], "x": 13, "y": 2.25},
+                {"matrix": [9, 2], "x": 14, "y": 2.125},
+                {"matrix": [9, 3], "x": 15, "y": 2},
+                {"matrix": [9, 4], "x": 16, "y": 2.125},
+                {"matrix": [9, 5], "x": 17, "y": 2.375},
+                {"matrix": [9, 6], "x": 18, "y": 2.375},
+
+                {"matrix": [3, 0], "x": 0, "y": 3.375},
+                {"matrix": [3, 1], "x": 1, "y": 3.375},
+                {"matrix": [3, 2], "x": 2, "y": 3.125},
+                {"matrix": [3, 3], "x": 3, "y": 3},
+                {"matrix": [3, 4], "x": 4, "y": 3.125},
+                {"matrix": [3, 5], "x": 5, "y": 3.25},
+                {"matrix": [3, 6], "x": 6, "y": 3.25},
+
+                {"matrix": [10, 0], "x": 12, "y": 3.25},
+                {"matrix": [10, 1], "x": 13, "y": 3.25},
+                {"matrix": [10, 2], "x": 14, "y": 3.125},
+                {"matrix": [10, 3], "x": 15, "y": 3},
+                {"matrix": [10, 4], "x": 16, "y": 3.125},
+                {"matrix": [10, 5], "x": 17, "y": 3.375},
+                {"matrix": [10, 6], "x": 18, "y": 3.375},
+
+                {"matrix": [4, 0], "x": 0, "y": 4.375},
+                {"matrix": [4, 1], "x": 1, "y": 4.375},
+                {"matrix": [4, 2], "x": 2, "y": 4.125},
+                {"matrix": [4, 3], "x": 3, "y": 4},
+                {"matrix": [4, 4], "x": 4, "y": 4.125},
+                {"matrix": [4, 5], "x": 5, "y": 4.25},
+
+                {"matrix": [11, 1], "x": 13, "y": 4.25},
+                {"matrix": [11, 2], "x": 14, "y": 4.125},
+                {"matrix": [11, 3], "x": 15, "y": 4},
+                {"matrix": [11, 4], "x": 16, "y": 4.125},
+                {"matrix": [11, 5], "x": 17, "y": 4.375},
+                {"matrix": [11, 6], "x": 18, "y": 4.375},
+
+                {"matrix": [5, 0], "x": 0, "y": 5.375},
+                {"matrix": [5, 1], "x": 1, "y": 5.375},
+                {"matrix": [5, 2], "x": 2, "y": 5.125},
+                {"matrix": [5, 3], "x": 3, "y": 5},
+
+                {"matrix": [12, 3], "x": 15, "y": 5},
+                {"matrix": [12, 4], "x": 16, "y": 5.125},
+                {"matrix": [12, 5], "x": 17, "y": 5.375},
+                {"matrix": [12, 6], "x": 18, "y": 5.375},
+
+                {"matrix": [5, 4], "x": 5, "y": 6.25, "h": 1.25},
+                {"matrix": [5, 5], "x": 6, "y": 6, "h": 1.25},
+
+                {"matrix": [12, 1], "x": 12, "y": 6, "h": 1.25},
+                {"matrix": [12, 2], "x": 13, "y": 6.25, "h": 1.25},
+
+                {"matrix": [6, 4], "x": 7, "y": 6.25},
+                {"matrix": [6, 5], "x": 8, "y": 6.5},
+
+                {"matrix": [13, 1], "x": 10, "y": 6.5},
+                {"matrix": [13, 2], "x": 11, "y": 6.25},
+
+                {"matrix": [6, 2], "x": 7, "y": 7.25},
+                {"matrix": [6, 3], "x": 8, "y": 7.5},
+
+                {"matrix": [13, 3], "x": 10, "y": 7.5},
+                {"matrix": [13, 4], "x": 11, "y": 7.25}
+            ]
+        }
+    }
+}
+```
+
+`"development_board": "kb2040"` contains preset for `bootloader` and `processor`.
+
+`"bootmagic": true` let us get into the bootloader without pressing the bootloader button on the microcontroller.[^6]
+
+By default, it will get into the bootloader by holding `[0, 0]` (our `Esc`) when plugging the keyboard in to the computer.
+
+Under `"split":`, I defined `"matrix": [7, 6]` which let us use the far right top button on the right side for bootmagic.
+
+`"matrix_pins":` and `"layouts":` are based on our matrix. It will be different if you wire the keyboard matrix differently.
+Those `"x"` and `"y"` are for the visualization in [QMK Configurator](https://config.qmk.fm/).
+
+:::tip
+
+We can import the `keyboard.json` to [QMK Configurator](https://config.qmk.fm/) by pressing `Ctrl + Shift + I`.
+
+It's only for preview. The configurator can't generate the firmware for RP2040. We can use Vial QMK instead.
+
+:::
+
+```c copy showLineNumbers title="config.h"
+#pragma once
+
+#define EE_HANDS                 // Handedness by EEPROM
+#define SERIAL_USART_FULL_DUPLEX // Use TRRS
+#define SERIAL_USART_TX_PIN GP0  // TX pin
+#define SERIAL_USART_RX_PIN GP1  // RX pin
+
+#define TAPPING_TOGGLE 2 // number of taps to toggle TT
+```
+
+`EE_HANDS` is one of the handedness[^7] which helps the firemware to determine which side is which.
+This method does not require extra hardware or soldering. Additionally, it allows the usb cable to plug into any side.
+It works with one side as well if I disconnect the TRRS cable between two halves.
+
+`TAPPING_TOGGLE 2` 5 taps by default for toggling a keymap layer.[^8]
+
+```makefile copy showLineNumbers title="rules.mk"
+SERIAL_DRIVER = vendor
+```
+
+Just one line only, this is for the USART Full-duplex[^2].
+
+#### Defining Keymap
+
+#include QMK_KEYBOARD_H
+
+Check out the [Keycodes Overview | QMK Firmware](https://docs.qmk.fm/keycodes).
+
+```c copy showLineNumbers title="keymaps/default/keymap.c"
+enum layers {
+    _QWERTY,
+    _FISRT
+};
+
+const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+    /*
+     * ┌───┬───┬───┬───┬───┬───┬───┐                     ┌───┬───┬───┬───┬───┬───┬───┐
+     * │Esc│F1 │F2 │F3 │F4 │F5 │F6 │                     │F7 │F8 │F9 │F10│F11│F12│SCR│
+     * ├───┼───┼───┼───┼───┼───┼───┤                     ├───┼───┼───┼───┼───┼───┼───┤
+     * │ = │ 1 │ 2 │ 3 │ 4 │ 5 │   │                     │   │ 6 │ 7 │ 8 │ 9 │ 0 │ - │
+     * ├───┼───┼───┼───┼───┼───┼───┤                     ├───┼───┼───┼───┼───┼───┼───┤
+     * │Tab│ Q │ W │ E │ R │ T │   │                     │   │ Y │ U │ I │ O │ P │ \ │
+     * ├───┼───┼───┼───┼───┼───┼───┤                     ├───┼───┼───┼───┼───┼───┼───┤
+     * │Cap│ A │ S │ D │ F │ G │   │                     │   │ H │ J │ K │ L │ ; │ ' │
+     * ├───┼───┼───┼───┼───┼───┼───┘                     └───┼───┼───┼───┼───┼───┼───┤
+     * │Sft│ Z │ X │ C │ V │ B │                             │ N │ M │ , │ . │ / │Sft│
+     * ├───┼───┼───┼───┼───┴───┘                             └───┴───┼───┼───┼───┼───┤
+     * │ ` │Spc│ ← │ → │                                             │ ↓ │ ↑ │ [ │ ] │
+     * └───┴───┴───┴───┘     ┌───┬───┬───┬───┐ ┌───┬───┬───┬───┐     └───┴───┴───┴───┘
+     *                       │   │   │KpE│Win│ │PgU│Hom│   │   │
+     *                       │Bsp│Ctl├───┼───┤ ├───┼───┤Ent│Spc│
+     *                       │   │   │Alt│Del│ │PgD│End│   │   │
+     *                       └───┴───┴───┴───┘ └───┴───┴───┴───┘
+     */
+    [_QWERTY] = LAYOUT(
+        KC_ESC , KC_F1  , KC_F2  , KC_F3  , KC_F4  , KC_F5  , KC_F6  ,                     KC_F7  , KC_F8  , KC_F9  , KC_F10 , KC_F11 , KC_F12 , KC_PSCR,
+        KC_EQL , KC_1   , KC_2   , KC_3   , KC_4   , KC_5   , TT(_FISRT),               TT(_FISRT), KC_6   , KC_7   , KC_8   , KC_9   , KC_0   , KC_MINS,
+        KC_TAB , KC_Q   , KC_W   , KC_E   , KC_R   , KC_T   , KC_MNXT,                     KC_VOLU, KC_Y   , KC_U   , KC_I   , KC_O   , KC_P   , KC_BSLS,
+        KC_CAPS, KC_A   , KC_S   , KC_D   , KC_F   , KC_G   , KC_MPRV,                     KC_VOLD, KC_H   , KC_J   , KC_K   , KC_L   , KC_SCLN, KC_QUOT,
+        KC_LSFT, KC_Z   , KC_X   , KC_C   , KC_V   , KC_B   ,                                       KC_N   , KC_M   , KC_COMM, KC_DOT , KC_SLSH, KC_RSFT,
+        KC_GRV , KC_SPC , KC_LEFT, KC_RGHT,                                                                           KC_DOWN, KC_UP  , KC_LBRC, KC_RBRC,
+                                                     KC_BSPC, KC_LCTL,                     KC_ENT , KC_SPC ,
+                                                     KC_PENT, KC_LGUI,                     KC_PGUP, KC_HOME,
+                                                     KC_LALT, KC_DEL ,                     KC_PGDN, KC_END
+    ),
+    [_FISRT] = LAYOUT(
+        QK_BOOT, KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  ,                     KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , QK_BOOT,
+        KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , TG(_FISRT),               TG(_FISRT), KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  ,
+        KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  ,                     KC_NO  , KC_NO  , KC_WH_U, KC_NO  , KC_NO  , KC_NO  , KC_NO  ,
+        KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  ,                     KC_NO  , KC_NO  , KC_MS_L, KC_MS_D, KC_MS_U, KC_MS_R, KC_NO  ,
+        KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  , KC_NO  ,                                       KC_NO  , KC_WH_D, KC_NO  , KC_NO  , KC_NO  , KC_NO  ,
+        KC_NO  , KC_NO  , KC_NO  , KC_NO  ,                                                                           KC_NO  , KC_NO  , KC_NO  , KC_NO  ,
+                                                     KC_NO  , KC_NO  ,                     KC_BTN1, KC_BTN2,
+                                                     KC_NO  , KC_NO  ,                     KC_NO  , KC_NO  ,
+                                                     KC_NO  , KC_NO  ,                     KC_NO  , KC_BTN3
+    )
+};
+```
+
+This is my first keymap. I added the `_FISRT` layer to allow easy access to the bootloader without unplugging and re-plugging the keyboard.
+
+Later on, I incorporated an one-handed typing option[^9] (Half-QWERTY[^10]) to the `_FISRT` layer. This way, I can type with my left hand while holding the mouse with my right hand.
+
+#### Flashing Firmware
+
+1. Disconnect the split keyboard from the computer
+2. Open the QMK MSYS terminal
+3. Run the following `flash` command to compile the firmware and flash the left side, then the right side:
+
+```bash copy showLineNumbers
+for SIDE in left right
+do
+    qmk flash -kb handwired/lz_manuform -km default -e MAKECMDGOALS=uf2-split-$SIDE -e TARGET=$SIDE
+done
+```
+
+4. Plug in the left side while holding the `Esc` when you see the message `Waiting for drive to deploy…`
+5. Unplug the left side and plug in the right side (bootloader) when it’s compiling the right side firmware
+6. DONE
+
+Here is a working split keyboard!
+
+### [Optional] Building Vial QMK
+
+QMK is great but we need to reflash the firemware every time when we updated the keymap.
+
+[Vial QMK](https://get.vial.today) is an unoffical QMK fork that let we change the keymap on fly without recompiling the firemware.
+
+#### Porting Firmware
+
+The [Build support 1 - Create JSON - Vial](https://get.vial.today/docs/porting-to-via.html)(Porting Guide)
+is relatively simply by comparing with setting up our own QMK firemware.
+
+Here are my Vial files. They're very long...
+
+```json copy showLineNumbers title="keymaps/vial/vial.json"
+{
+    "name": "LZ Manuform",
+    "vendorId": "0x0130",
+    "productId": "0xFADE",
+    "matrix": {
+        "rows": 14,
+        "cols": 7
+    },
+    "layouts": {
+        "keymap": [
+            [
+              {
+                "x": 3
+              },
+              "0,3",
+              {
+                "x": 11
+              },
+              "7,3"
+            ],
+            [
+              {
+                "y": -0.875,
+                "x": 2
+              },
+              "0,2",
+              {
+                "x": 1
+              },
+              "0,4",
+              {
+                "x": 9
+              },
+              "7,2",
+              {
+                "x": 1
+              },
+              "7,4"
+            ],
+            [
+              {
+                "y": -0.875,
+                "x": 5
+              },
+              "0,5",
+              "0,6",
+              {
+                "x": 5
+              },
+              "7,0",
+              "7,1"
+            ],
+            [
+              {
+                "y": -0.875
+              },
+              "0,0",
+              "0,1",
+              {
+                "x": 15
+              },
+              "7,5",
+              "7,6"
+            ],
+            [
+              {
+                "y": -0.375,
+                "x": 3
+              },
+              "1,3",
+              {
+                "x": 11
+              },
+              "8,3"
+            ],
+            [
+              {
+                "y": -0.875,
+                "x": 2
+              },
+              "1,2",
+              {
+                "x": 1
+              },
+              "1,4",
+              {
+                "x": 9
+              },
+              "8,2",
+              {
+                "x": 1
+              },
+              "8,4"
+            ],
+            [
+              {
+                "y": -0.875,
+                "x": 5
+              },
+              "1,5",
+              "1,6",
+              {
+                "x": 5
+              },
+              "8,0",
+              "8,1"
+            ],
+            [
+              {
+                "y": -0.875
+              },
+              "1,0",
+              "1,1",
+              {
+                "x": 15
+              },
+              "8,5",
+              "8,6"
+            ],
+            [
+              {
+                "y": -0.375,
+                "x": 3
+              },
+              "2,3",
+              {
+                "x": 11
+              },
+              "9,3"
+            ],
+            [
+              {
+                "y": -0.875,
+                "x": 2
+              },
+              "2,2",
+              {
+                "x": 1
+              },
+              "2,4",
+              {
+                "x": 9
+              },
+              "9,2",
+              {
+                "x": 1
+              },
+              "9,4"
+            ],
+            [
+              {
+                "y": -0.875,
+                "x": 5
+              },
+              "2,5",
+              "2,6",
+              {
+                "x": 5
+              },
+              "9,0",
+              "9,1"
+            ],
+            [
+              {
+                "y": -0.875
+              },
+              "2,0",
+              "2,1",
+              {
+                "x": 15
+              },
+              "9,5",
+              "9,6"
+            ],
+            [
+              {
+                "y": -0.375,
+                "x": 3
+              },
+              "3,3",
+              {
+                "x": 11
+              },
+              "10,3"
+            ],
+            [
+              {
+                "y": -0.875,
+                "x": 2
+              },
+              "3,2",
+              {
+                "x": 1
+              },
+              "3,4",
+              {
+                "x": 9
+              },
+              "10,2",
+              {
+                "x": 1
+              },
+              "10,4"
+            ],
+            [
+              {
+                "y": -0.875,
+                "x": 5
+              },
+              "3,5",
+              "3,6",
+              {
+                "x": 5
+              },
+              "10,0",
+              "10,1"
+            ],
+            [
+              {
+                "y": -0.875
+              },
+              "3,0",
+              "3,1",
+              {
+                "x": 15
+              },
+              "10,5",
+              "10,6"
+            ],
+            [
+              {
+                "y": -0.375,
+                "x": 3
+              },
+              "4,3",
+              {
+                "x": 11
+              },
+              "11,3"
+            ],
+            [
+              {
+                "y": -0.875,
+                "x": 2
+              },
+              "4,2",
+              {
+                "x": 1
+              },
+              "4,4",
+              {
+                "x": 9
+              },
+              "11,2",
+              {
+                "x": 1
+              },
+              "11,4"
+            ],
+            [
+              {
+                "y": -0.875,
+                "x": 5
+              },
+              "4,5",
+              {
+                "x": 7
+              },
+              "11,1"
+            ],
+            [
+              {
+                "y": -0.875
+              },
+              "4,0",
+              "4,1",
+              {
+                "x": 15
+              },
+              "11,5",
+              "11,6"
+            ],
+            [
+              {
+                "y": -0.375,
+                "x": 3
+              },
+              "5,3",
+              {
+                "x": 11
+              },
+              "12,3"
+            ],
+            [
+              {
+                "y": -0.875,
+                "x": 2
+              },
+              "5,2",
+              {
+                "x": 13
+              },
+              "12,4"
+            ],
+            [
+              {
+                "y": -0.75
+              },
+              "5,0",
+              "5,1",
+              {
+                "x": 15
+              },
+              "12,5",
+              "12,6"
+            ],
+            [
+              {
+                "y": -0.375,
+                "x": 6,
+                "h": 1.25
+              },
+              "5,5",
+              {
+                "x": 5,
+                "h": 1.25
+              },
+              "12,1"
+            ],
+            [
+              {
+                "y": -0.75,
+                "x": 5,
+                "h": 1.25
+              },
+              "5,4",
+              {
+                "x": 1
+              },
+              "6,4",
+              {
+                "x": 3
+              },
+              "13,2",
+              {
+                "x": 1,
+                "h": 1.25
+              },
+              "12,2"
+            ],
+            [
+              {
+                "y": -0.75,
+                "x": 8
+              },
+              "6,5",
+              {
+                "x": 1
+              },
+              "13,1"
+            ],
+            [
+              {
+                "y": -0.25,
+                "x": 7
+              },
+              "6,2",
+              {
+                "x": 3
+              },
+              "13,4"
+            ],
+            [
+              {
+                "y": -0.75,
+                "x": 8
+              },
+              "6,3",
+              {
+                "x": 1
+              },
+              "13,3"
+            ]
+          ]
+    }
+}
+
+```
+
+```c copy showLineNumbers title="keymaps/vial/config.h"
+#define VIAL_KEYBOARD_UID { /*Generate yourself*/ }
+#define VIAL_UNLOCK_COMBO_ROWS { 0, 7 }
+#define VIAL_UNLOCK_COMBO_COLS { 0, 6 }
+```
+Holding down `[0, 0]` and `[7, 6]` to unlock the keyboard for Vial Gui.
+
+#### Flashing Firmware
+
+It's very similar to the offical QMK. Ensure we are in the `vial-qmk` directory before compiling and flashing our keyboard with the follow `make` command:
+
+```bash copy showLineNumbers
+for SIDE in left right
+do
+    make handwired/lz_manuform:vial:uf2-split-$SIDE -e TARGET=$SIDE
+done
+```
+
+#### Afterword
+
+I’ll switch back to official QMK once I’m done prototyping the keymap because I prefer having full control of the firmware, and I believe less is more.
 
 <br/>
 
@@ -132,4 +859,11 @@ Hardware is done, it's time for the software.
 
 [^1]: [Overview | Adafruit KB2040 | Adafruit Learning System](https://learn.adafruit.com/adafruit-kb2040?view=all)
 [^2]: ['serial' Driver | QMK Firmware](https://docs.qmk.fm/drivers/serial#usart-full-duplex)
-[^3]: [Split Keyboard | QMK Firmware](https://docs.qmk.fm/features/split_keyboard#i2c-wiring)
+[^3]: [Split Keyboard (#i2c-wiring) | QMK Firmware ](https://docs.qmk.fm/features/split_keyboard#i2c-wiring)
+[^4]: [Hand-Wiring Guide | QMK Firmware](https://docs.qmk.fm/hand_wire#wiring-the-matrix)
+[^5]: [Rollover, blocking and ghosting - Deskthority wiki](https://deskthority.net/wiki/Rollover,_blocking_and_ghosting)
+[^6]: [Bootmagic | QMK Firmware](https://docs.qmk.fm/features/bootmagic)
+[^7]: [Split Keyboard (#handedness-by-eeprom) | QMK Firmware](https://docs.qmk.fm/features/split_keyboard#handedness-by-eeprom)
+[^8]: [Layers | QMK Firmware](https://docs.qmk.fm/feature_layers#switching-and-toggling-layers)
+[^9]: [Your Guide to 10+ One-hand Typing Options - KPR Blog](https://kpronline.com/blog/your-guide-to-10-one-hand-typing-options/)
+[^10]: [Half-QWERTY: A One-handed Keyboard Facilitating Skill Transfer From QWERTY](https://www.yorku.ca/mack/CHI93c.html)

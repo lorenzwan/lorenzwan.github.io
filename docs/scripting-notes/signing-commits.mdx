@@ -11,7 +11,7 @@ TL;DR Who doesn't like the <span style={{color:"#3FB946"}}>Verified</span> tag?
 
 ## Steps
 
-### Setup Git Identity
+### Setting Up Git Identity
 
 ```powershell copy showLineNumbers
 # Remove --global if needed
@@ -20,7 +20,7 @@ git config --global user.email $xxxx@users.noreply.github.com # Can be found in 
 ```
 [^2]
 
-### Generate GPG Key
+### Generating GPG Key
 
 1. Install [Gpg4win](https://www.gpg4win.org) as recommended by GitHub Docs for Windows users[^3]
 2. Open Kleopatra (Can do it in cmd instead)
@@ -29,7 +29,7 @@ git config --global user.email $xxxx@users.noreply.github.com # Can be found in 
     - Check "Protect the generated key with a passphrase" is recommended
     - (Optional) Click "Advanced Settings..." for changing the expiration date
 
-### Config Git
+### Configuring Git
 
 ```powershell copy showLineNumbers
 git config --global user.signingkey $KeyID # Can be found in Kleopatra "Certificates" > "Key-ID"
@@ -38,14 +38,14 @@ git config --global gpg.program "C:\Program Files (x86)\GnuPG\bin\gpg.exe" # Cha
 ```
 [^4]
 
-### Config GitHub
+### Configuring GitHub
 
 1. Go to GitHub "Settings" > "SSH and GPG keys" > "New GPG key"[^5]
 2. "Key" can be found in Kleopatra by double chicking the certificate > "Export"
     - It should begins with `-----BEGIN PGP PUBLIC KEY BLOCK-----`
 3. DONE
 
-### Transfer Settings
+### Transferring Settings
 
 These files might be helpful for setting up anther machine
 

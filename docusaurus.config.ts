@@ -7,7 +7,7 @@ import MyPrismDark from './src/theme/myPrismDark';
 const config: Config = {
   title: 'Lorenz Wan',
   tagline: 'A character rigger / tech artist who likes DIY',
-  favicon: 'img/favicon.ico',
+  favicon: '/img/favicon.ico',
 
   // Set the production url of your site here
   url: 'https://lorenzwan.com',
@@ -108,7 +108,7 @@ const config: Config = {
   ],
 
   themeConfig: {
-    image: 'img/logo.png',
+    image: '/img/logo.png',
     colorMode: {
       defaultMode: 'dark',
     },
@@ -116,7 +116,7 @@ const config: Config = {
       title: 'Lorenz Wan',
       logo: {
         alt: 'Lorenz Wan Logo',
-        src: 'img/logoSmall.png',
+        src: '/img/logoSmall.png',
       },
       items: [
         {
@@ -152,7 +152,7 @@ const config: Config = {
     prism: {
       theme: MyPrismLight,
       darkTheme: MyPrismDark,
-      additionalLanguages: ['powershell'],
+      additionalLanguages: ['powershell', 'json', 'makefile'],
     },
   } satisfies Preset.ThemeConfig,
 
@@ -162,6 +162,7 @@ const config: Config = {
       const result = await params.defaultParseFrontMatter(params)
       result.frontMatter.pagination_prev = null
       result.frontMatter.pagination_next = null
+      result.frontMatter.toc_max_heading_level = 4
       return result
     },
   },
