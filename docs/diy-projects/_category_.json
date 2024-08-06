@@ -1,4 +1,5 @@
 {
-  "label": "DIY Projects",
-  "position": 4
+  "position": 4,
+  "className": "diy-projects-menu",
+  "label": "DIY Projects"
 }
