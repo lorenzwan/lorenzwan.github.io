@@ -8,16 +8,11 @@ tags:
   - "GP2040-CE"
 ---
 
-:::danger You know what?
-
-This page is coming soon<sup>TM</sup>...
-
-:::
-
 ## Overview
 
 Building an arcade stick to replace the HORI Real Arcade Pro 4 Kai that I got many years ago. The buttons on the HIRO stick are very spread out so my fingers get tired easily.
-Here is how I build a custom arcade stick by using RP2040 microcontroller and GP2040-CE firmware.
+Here is how I build a custom arcade stick by using RP2040 microcontroller and [GP2040-CE firmware](https://github.com/OpenStickCommunity/GP2040-CE). I added an OLED Display for debugging and so many extra buttons to the controller.
+The page will focus on how to build a standard one and briefly cover what I did for the extra stuff. 
 
 ### Final Product
 
@@ -27,3 +22,68 @@ Here is how I build a custom arcade stick by using RP2040 microcontroller and GP
 ### Side by Side
 
 ![Side by Side](/img/diy-projects/arcade-stick/side-by-side.jpg)
+
+## Tools
+
+| Item | Notes |
+| :- | :- |
+| 3D Printer | Print the cases |
+| Multimeter | Test connections |
+| Soldering Kit | (Optional for small buttons) |
+| Wire Stripper | (Optional for OLED Display / extra buttons) Make DuPont connectors |
+| Crimping Tool Kit | Same as above |
+
+## Parts
+
+**Bold** items are what I use for this project
+
+| Item | QTY | Notes |
+| :- | :-: | :- |
+| Cases | 1 |  |
+| Microcontrollers | 1 | **RP2040 Advanced Breakout Board V5.6E**, Raspberry Pi Pico RP2040 |
+| Joystick | 1 | **SANWA JLX-TP-8YT** |
+| Buttons | - | **CROWN/SAMDUCKSA SDB-202 MX SCREWBUTTON** |
+| Type A-B Cable | 2 | One long, one short |
+| A/B USB Feed-Through | 1 | **Neutrik NAUSB-W-B** |
+| 20-Pin Joystick/Button Harness | 1 | Making the wiring easier |
+| 4-Pin L3/R3/Touchpad Button Harness | 1 | Same as above |
+| 24 Gauge Stranded Wire | - | For extra buttons and stuff |
+| M3 Flat Head Screws | 4 | Mounting the microcontroller |
+| M3 Heat Set Threaded Inserts | 4 | Same as above |
+| M4 Flat Head Screws | 16 | Assembling the case |
+| M4 Heat Set Threaded Inserts | 16 | Same as above |
+| Rubber Feet | 8 |  |
+
+## Steps
+
+### Making & Print Cases
+
+My case is mostly based on [Fightstick Case](https://github.com/OpenStickCommunity/Hardware/tree/main/3D%20Prints/Fightstick%20Case) from the OpenStickCommunity.
+There are many other options online.
+
+![Case](/img/diy-projects/arcade-stick/case.png)
+
+I modeled in Houdini but I would like to give Autodesk Fusion a try next time.
+
+### Wiring Everything
+
+I recommend reading [RP2040 Advanced Breakout Board](https://github.com/OpenStickCommunity/Hardware/tree/main/Boards/GP2040-CE%20Official%20Boards/RP2040%20Advanced%20Breakout%20Board/RP2040%20Advanced%20Breakout%20Board%20-%20Passthrough) page first.
+The pins on the microcontroller are well labeled. We just need to follow the [Button Labeling Table](https://gp2040-ce.info/usage).
+The joystick orientation matters, so either find the product instructions or just plug it in, record the registered inputs, and then replug them.
+
+### Configuring Firmware
+
+Using the [Web-Configurator](https://gp2040-ce.info/web-configurator/) from the firemware, you can customize the controller to your preference.
+
+Happy Fighting!
+
+### [Optional] Extra Buttons
+
+`GPIO26, 27, 28, 29` can be used as extra buttons, e.g. hitbox direction buttons while using the joystick.
+
+### [Optional] OLED Display
+
+I have a 1.3-inch OLED Display SH1106 Module. It has `GND, VCC, SDA, SCL` pins on the module.
+I connected those pins to the `G, 3x3, SDA, SCL` pins next to the `EXPANSION` label.
+Beware that the order of the pins between the module and the microcontroller might not be the same.
+Using a wire stripper and crimping tool to make a 4-pin connecter can make the wiring looks cleaner.
