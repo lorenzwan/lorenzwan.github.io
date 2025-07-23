@@ -1,0 +1,67 @@
+---
+sidebar_position: 4
+sidebar_class_name: "maya-utilities-menu"
+title: "Maya Utilities"
+description: "Some Maya commands and tracks that I used."
+tags:
+  - "Python"
+---
+
+:::warning
+This page is under construction...
+:::
+
+## Overview
+This page covers various general-purpose Maya (current using **2024**) commands and tracks that aren't tied to any specific project, primarily using `pymel.core` for its object-oriented structure and improved readability.
+
+[Why PyMEL? — PyMEL documentation](https://help.autodesk.com/cloudhelp/2020/CHS/Maya-Tech-Docs/PyMel/why_pymel.html)
+
+```python copy showLineNumbers
+from PySide2.QtWidgets import QMainWindow
+from shiboken2 import wrapInstance
+import maya.OpenMayaUI as omui
+
+def getMainWindow() -> QMainWindow:
+    """Get Maya main window and wrap it as QMainWindow"""
+    return wrapInstance(int(omui.MQtUtil.mainWindow()), QMainWindow)
+```
+
+```python copy showLineNumbers
+from sys import modules
+from importlib import reload
+
+def reloadImported():
+    """Reload imported modules under bob"""
+    # Sort imported modules for better readability
+    for module in sorted(list(modules.keys())):
+        if module.startswith("bob."):
+            importlib.reload(modules[module])
+            print(f"Reloaded {module}")
+```
+
+```python copy showLineNumbers
+from pathlib import Path
+import pymel.core as pm
+
+def cleanNanFloat(filepath: Path = None):
+    """
+    Clean up nan from a scene
+
+    :param filepath: the path of the maya scene
+    :raises RuntimeError: If given path isn't a .ma
+    """
+    if filepath is None:
+        filepath = pm.sceneName()
+    filepath = Path(filepath)
+    if filepath.suffix != ".ma":
+        raise RuntimeError(f"The given path {filepath} is not a .ma.")
+    
+    with open(filepath, "r") as ma:
+        text = ma.read()
+    
+    # Some online cases contain "-nan(ind)", I haven't seen it so far
+    with open(filepath, "w") as ma:
+        ma.write(text.replace(" nan", " 0"))
+
+    pm.openFile(filepath, force=True)
+```

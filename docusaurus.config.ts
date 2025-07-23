@@ -83,7 +83,6 @@ const config: Config = {
           routeBasePath: '/',
           sidebarPath: './sidebars.ts',
           sidebarCollapsed: false,
-          showLastUpdateTime: true,
         },
         blog: false,
         theme: {

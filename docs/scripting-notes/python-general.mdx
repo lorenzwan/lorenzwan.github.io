@@ -1,0 +1,133 @@
+---
+sidebar_position: 2
+sidebar_class_name: "python-general-menu"
+title: "Python General"
+description: "Some Python modules and utilities that I have used."
+tags:
+  - "Python"
+---
+
+## Overview
+
+This page covers general-purpose Python modules and utilities I've used that aren't tied to any specific project.
+Modules such as `traceback`, `logging`, `json`, `xml.etree.ElementTree`, and `subprocess` are fairly self-explanatory and therefore not documented here.
+
+### importlib
+
+In Python3, they moved `reload` to `importlib`.
+
+### re
+
+[re — Python documentation](https://docs.python.org/3/library/re.html)
+
+Using it for filtering files or search pattern form a string.
+
+A pages like [RegEX Cheat Sheet & Quick Reference](https://quickref.me/regex.html) and [RegExr: Learn, Build, & Test RegEx](https://regexr.com) help a lot!
+
+### timeit
+
+[timeit — Python documentation](https://docs.python.org/3/library/timeit.html)
+
+It's a great way to perf test the code. 
+
+```python copy showLineNumbers title="Input"
+import timeit
+
+myList: list[int] = list(range(100000))
+myDict: dict[int, int] = {}
+def loopA():
+    myDict.clear()
+    index = 0
+    for item in myList:
+        myDict[index] = item
+        index += 1
+        
+def loopB():
+    myDict.clear()
+    for index, item in enumerate(myList):
+        myDict[index] = item
+        
+myDict.clear()
+print(timeit.timeit(loopA, number=100))
+myDict.clear()
+print(timeit.timeit(loopB, number=100))
+```
+
+```python copy showLineNumbers title="Output"
+0.5914330999999038
+0.5857410999997228
+```
+
+Enumerate has better readability. How about in performance? (Result might be different based on your setup.) In my case, enumerate is a little bit faster.
+
+### pathlib
+
+[pathlib — Python documentation](https://docs.python.org/3/library/pathlib.html)
+
+An object-oriented filesystem paths module.
+
+```python copy showLineNumbers title="Input"
+from pathlib import Path
+
+myPath: Path = Path(r"D:\Downloads\me.jpg")
+print(myPath.)exists
+print(myPath.name)
+print(myPath.stem)
+print(myPath.suffix)
+print(myPath.parent)
+```
+
+```python copy showLineNumbers title="Output"
+True
+me.jpg
+me
+.jpg
+D:\Downloads
+```
+
+Some modules still support string path only, then we need to cast it to back to string by `str(myPath)`.
+
+```python copy showLineNumbers title="Handy fucntions"
+import shutil
+
+shutil.rmtree(myPath) # remove the entire directory tree
+myPath.glob("*.py") # get a list of .py under a directory
+myPath.mkdir(parents=True, exist_ok=True) # create directory with the missing parents and won't raise FileExistsError
+```
+
+### pillow
+
+[Pillow (PIL Fork) documentation](https://pillow.readthedocs.io/en/stable/reference/index.html)
+
+An image processing module. Here is an example,
+
+
+```python copy showLineNumbers title="Apply alpha"
+from PIL import Image
+
+diffuseImageRGBA: Image = Image.open(r"D:\Downloads\diffuse.jpg").convert("RGBA")
+alphaImageL: Image = Image.open(r"D:\Downloads\alpha.jpg").convert("L")
+diffuseImageRGBA.putalpha(alphaImageL)
+diffuseImageRGBA.save(r"D:\Downloads\output.png")
+diffuseImageRGBA.show()
+```
+
+More examples can be found in [Image Processing With the Python Pillow Library – Real Python](https://realpython.com/image-processing-with-the-python-pillow-library/)
+
+### moviepy
+
+[moviepy — MoviePy documentation](https://zulko.github.io/moviepy/reference/reference/moviepy.html)
+
+It can turn an image sequence into a video in 3 lines.
+
+```python copy showLineNumbers title="From exr sequence to mp4"
+from pathlib import Path
+from moviepy import ImageSequenceClip
+
+# ImageSequenceClip doesn't take Path
+imgSq: list[str] = [str(path) for path in Path(r"D:\Downloads\images").glob("*.exr")]
+clip: ImageSequenceClip = ImageSequenceClip(imgSq, fps=30)
+clip.write_videofile(r"D:\Downloads\images\moviepyOutput.mp4", codec="libx264")
+```
+
+I have done the same thing with the `cv2` OpenCV module too!

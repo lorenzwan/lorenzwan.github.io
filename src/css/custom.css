@@ -185,6 +185,18 @@ html[data-theme='dark'] {
   mask-image: url(/img/svg/patch-check.svg);
 }
 
+.python-general-menu > .menu__link::before {
+  mask-image: url(/img/svg/python.svg);
+}
+
+.qt-widgets-menu > .menu__link::before {
+  mask-image: url(/img/svg/qt.svg);
+}
+
+.maya-utilities-menu > .menu__link::before {
+  mask-image: url(/img/svg/maya.svg);
+}
+
 .diy-projects-menu .menu__link--sublist-caret::before {
   mask-image: url(/img/svg/tools.svg);
 }
