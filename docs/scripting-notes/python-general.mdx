@@ -16,13 +16,33 @@ Modules such as `traceback`, `logging`, `json`, `xml.etree.ElementTree`, and `su
 
 In Python3, they moved `reload` to `importlib`.
 
+```python copy showLineNumbers
+from sys import modules
+from importlib import reload
+
+def reloadImported(packageNames: list[str] | str):
+    """Reload imported modules under a specific package(s).
+    
+    :param packageNames: name of the package
+    """
+    if type(packageNames) == str:
+        packageNames = [packageNames]
+    
+    # Sort imported modules for better readability
+    for module in sorted(list(modules.keys())):
+        for name in packageNames:
+            if module.startswith(f"{name}."):
+                reload(modules[module])
+                print(f"Reloaded {module}")
+```
+
 ### re
 
 [re — Python documentation](https://docs.python.org/3/library/re.html)
 
 Using it for filtering files or search pattern form a string.
 
-A pages like [RegEX Cheat Sheet & Quick Reference](https://quickref.me/regex.html) and [RegExr: Learn, Build, & Test RegEx](https://regexr.com) help a lot!
+Pages like [RegEX Cheat Sheet & Quick Reference](https://quickref.me/regex.html) and [RegExr: Learn, Build, & Test RegEx](https://regexr.com) help a lot!
 
 ### timeit
 

@@ -12,9 +12,11 @@ This page is under construction...
 :::
 
 ## Overview
-This page covers various general-purpose Maya (current using **2024**) commands and tracks that aren't tied to any specific project, primarily using `pymel.core` for its object-oriented structure and improved readability.
+This page covers various general-purpose Maya (current using **2024**) commands and tricks that aren't tied to any specific project, primarily using `pymel.core` for its object-oriented structure and improved readability.
 
 [Why PyMEL? — PyMEL documentation](https://help.autodesk.com/cloudhelp/2020/CHS/Maya-Tech-Docs/PyMel/why_pymel.html)
+
+### UI related
 
 ```python copy showLineNumbers
 from PySide2.QtWidgets import QMainWindow
@@ -22,30 +24,18 @@ from shiboken2 import wrapInstance
 import maya.OpenMayaUI as omui
 
 def getMainWindow() -> QMainWindow:
-    """Get Maya main window and wrap it as QMainWindow"""
+    """Get Maya main window and wrap it as QMainWindow."""
     return wrapInstance(int(omui.MQtUtil.mainWindow()), QMainWindow)
 ```
-
-```python copy showLineNumbers
-from sys import modules
-from importlib import reload
-
-def reloadImported():
-    """Reload imported modules under bob"""
-    # Sort imported modules for better readability
-    for module in sorted(list(modules.keys())):
-        if module.startswith("bob."):
-            importlib.reload(modules[module])
-            print(f"Reloaded {module}")
-```
+### Scene related
 
 ```python copy showLineNumbers
 from pathlib import Path
 import pymel.core as pm
 
-def cleanNanFloat(filepath: Path = None):
+def cleanNanFloat(filepath: Path | str | None = None):
     """
-    Clean up nan from a scene
+    Clean up nan from a scene.
 
     :param filepath: the path of the maya scene
     :raises RuntimeError: If given path isn't a .ma
@@ -64,4 +54,120 @@ def cleanNanFloat(filepath: Path = None):
         ma.write(text.replace(" nan", " 0"))
 
     pm.openFile(filepath, force=True)
+
+
+def deleteUnknownNodes():
+    """Remove all unknown nodes in the scene, like Mental Ray node from old Maya. """
+    unknownNodes: list[pm.PyNode] = pm.ls(type='unknown')
+    if unknownNodes:
+        print(f"Deleteing {unknownNodes}")
+        pm.lockNode(unknownNodes, lock=False)
+        pm.delete(unknownNodes)
+        print('All unknown nodes are removed')
 ```
+
+### Attr related
+
+```python copy showLineNumbers
+import pymel.core as pm
+
+def reindexMultiAttribute(attribute: pm.PyNode):
+    """
+    Reindex the connections in the multi attribute with no gaps.
+
+    :param attribute: Multi attribute
+    """
+    connections: list[list[pm.PyNode]] = attribute.listConnections(connections=True, plugs=True)
+    for index, connection in enumerate(connections):
+        thisPlug, inputPlug = connection
+        inputPlug // thisPlug
+        inputPlug >> attribute[index]
+```
+
+### Transform related
+
+```python copy showLineNumbers
+import pymel.core as pm
+import maya.api.OpenMaya as om
+
+def getBoundingBoxCenter(objects: pm.PyNode) -> tuple[float]:
+    """Get bounding box center of objects"""
+    bb: list[float] = pm.exactWorldBoundingBox(objects)
+    return (bb[0] + bb[3]) / 2, (bb[1] + bb[4]) / 2, (bb[2] + bb[5]) / 2
+
+def getCenterPositionBetweenTwo(objectA: pm.PyNode, objectB: pm.PyNode) -> om.MVector: 
+    start = om.MVector(pm.xform(objectA, q=True, translation=True, worldSpace=True))
+    end = om.MVector(pm.xform(objectB, q=True, translation=True, worldSpace=True))
+    return (start + end) / 2
+```
+
+### Mesh related
+
+```python copy showLineNumbers
+import pymel.core as pm
+
+def seperateMeshesByMaterial(meshes: list[pm.PyNode] | None = None):
+    """
+    Find faces from given meshes based on the shading engine node, and extract the faces.
+
+    :param meshes: a list of transform nodes to process
+    """
+    if not meshes:
+        meshes = pm.selected()
+
+    shapes: list[pm.PyNode] = [mesh.getShape() for mesh in meshes]
+    # Get all shadingEngine nodes from the given meshes
+    shadingEngines: list[pm.PyNode] = []
+    for mesh in meshes:
+        for shadingEngine in mesh.getShape().inputs(type="shadingEngine"):
+            shadingEngines.append(shadingEngine)
+    shadingEngines = list(set(shadingEngines))
+
+    # Find faces from shading engine
+    for shadingEngine in shadingEngines:
+        shapeAndMeshFaceDict: dict[pm.PyNode, list[pm.PyNode]] = {}
+        members = pm.sets(shadingEngine, query=True) # It returns all the faces in the scene
+        
+        # Orginize the data
+        for member in members:
+            shapeNode = member.node()
+            if shapeNode not in shapes:
+                # Skip if it is not part of the given mesh
+                continue
+            shapeAndMeshFaceDict.setdefault(shapeNode, []).append(member)
+        
+        # Extract faces for each shape
+        materialName = shadingEngine.surfaceShader.inputs()[0]
+        for shapeNode, meshFaces in shapeAndMeshFaceDict.items():
+            extractFaces(shapeNode, meshFaces, materialName)
+
+
+def extractFaces(shapeNode: pm.PyNode, meshFaces: list[pm.PyNode], preffix: str) -> pm.PyNode:
+    """
+    Duplicate the given mesh, add preffix to the new mesh,
+    and remove the faces that are not part of the given faces.
+
+    :param shapeNode: the orginal node
+    :param meshFaces: a list of MeshFace objects, looks like MeshFace('BobShape.f[0:123]')
+    :param preffix: the preffix of the new mesh name
+    """
+    shapeNodeName = shapeNode.getName()
+    transformNode = shapeNode.getParent()
+    transformNodeName = transformNode.getName()
+    newNodeName = f"{preffix}_{transformNodeName}"
+    newTransformNode = pm.duplicate(shapeNode, name=newNodeName)[0]
+    newShapeNode = newTransformNode.getShape()
+    newShapeNodeName = newShapeNode.getName()
+    
+    # The given meshFaces are based on the orginal mesh. Updates the name for the duplicated mesh.
+    facesToSelect = [str(meshFace).replace(shapeNodeName, newShapeNodeName) for meshFace in meshFaces]
+    pm.select(facesToSelect, replace=True)
+    pm.select(f"{newShapeNodeName}.f[*]", toggle=True) # Invert select
+    if pm.selected():
+        pm.polyDelFacet(pm.selected())
+        pm.bakePartialHistory(newShapeNodeName)
+    
+    return newTransformNode
+```
+
+### Rigging related
