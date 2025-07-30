@@ -91,14 +91,15 @@ import pymel.core as pm
 import maya.api.OpenMaya as om
 
 def getBoundingBoxCenter(objects: pm.PyNode) -> tuple[float]:
-    """Get bounding box center of objects"""
+    """Calculate bounding box center of objects"""
     bb: list[float] = pm.exactWorldBoundingBox(objects)
     return (bb[0] + bb[3]) / 2, (bb[1] + bb[4]) / 2, (bb[2] + bb[5]) / 2
 
 def getCenterPositionBetweenTwo(objectA: pm.PyNode, objectB: pm.PyNode) -> om.MVector: 
-    start = om.MVector(pm.xform(objectA, q=True, translation=True, worldSpace=True))
-    end = om.MVector(pm.xform(objectB, q=True, translation=True, worldSpace=True))
-    return (start + end) / 2
+    """Calculate the center position between two objects"""
+    startVector = om.MVector(pm.xform(objectA, query=True, translation=True, worldSpace=True))
+    endVector = om.MVector(pm.xform(objectB, query=True, translation=True, worldSpace=True))
+    return (startVector + endVector) / 2
 ```
 
 ### Mesh related
@@ -171,3 +172,39 @@ def extractFaces(shapeNode: pm.PyNode, meshFaces: list[pm.PyNode], preffix: str)
 ```
 
 ### Rigging related
+
+```python copy showLineNumbers
+import math
+import pymel.core as pm
+import maya.api.OpenMaya as om
+
+def getPVPosition(jointChain: list[pm.PyNode], distance: float = 1.0) -> om.MVector:
+    """
+    Calculate the a pole vector position for a planar joint chain.
+
+    :param jointChain: list of joints (all should lie on the same plane)
+    :param distance: distance multiplier
+    :return: position in world space
+    """
+    startVector = om.MVector(pm.xform(jointChain[0], query=True, translation=True, worldSpace=True))
+    endVector = om.MVector(pm.xform(jointChain[-1], query=True, translation=True, worldSpace=True))
+
+    # Get an average position of the in between joints
+    # Support joint chain with more than 3 joints.
+    inBetweenJoints = jointChain[1:-1]
+    middleVector = om.MVector()
+    for joint in inBetweenJoints:
+        middleVector += om.MVector(pm.xform(joint, query=True, translation=True, worldSpace=True))
+    middleVector /= len(inBetweenJoints)
+
+    # Find the position between the start and end based on the middle position
+    # Vector projection of one vector onto another
+    uVector = middleVector - startVector
+    vVector = endVector - startVector
+    angleTheta = uVector.angle(uVector)
+    projDistance = math.cos(angleTheta) * uVector.length()
+    projPosition = startVector + (vVector.normal() * projDistance)
+
+    # Move the projected point through the middle position
+    return projPosition + (middleVector - projPosition).normal() * (vVector.length() * distance)
+```
