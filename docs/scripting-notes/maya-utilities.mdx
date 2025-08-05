@@ -7,10 +7,6 @@ tags:
   - "Python"
 ---
 
-:::warning
-This page is under construction...
-:::
-
 ## Overview
 This page covers various general-purpose Maya (current using **2024**) commands and tricks that aren't tied to any specific project, primarily using `pymel.core` for its object-oriented structure and improved readability.
 
@@ -207,4 +203,66 @@ def getPVPosition(jointChain: list[pm.PyNode], distance: float = 1.0) -> om.MVec
 
     # Move the projected point through the middle position
     return projPosition + (middleVector - projPosition).normal() * (vVector.length() * distance)
+
+
+def matrixConstraint(
+        drivers: list[pm.PyNode] | pm.PyNode,
+        driven: pm.PyNode,
+        maintainOffset: bool = False,
+        translate: bool = True,
+        rotate: bool = True,
+        scale: bool = True,
+        zeroOutLocalOffset: bool = True
+        ) -> pm.PyNode:
+    """
+    Constrain an object's translation, rotation, scale with matrix nodes instead of parent constraint and scale constraint node.
+    The weight set to the last driver by default. To avoid unexpected behavior, do not use maintainOffset if there are more than one driver.
+    
+    :param drivers: target object(s)
+    :param driven: constrained object
+    :param maintainOffset: If True, the offset of the constrained object will be maintained
+    :param translate: If True, constrain the translation
+    :param rotate: If True, constrain the rotation
+    :param scale: If True, constrain the scale
+    :param zeroOutLocalOffset: If Ture, zero out the offset on the driven transform node
+    :return: blendMatrix node for setting weight later
+    """
+    if type(drivers) != list:
+        drivers = [drivers]
+    
+    drivenParent: pm.PyNode = driven.getParent()
+    nodePreffix: str = f"{driven.shortName()}_"
+    nodeSuffix: str = "_Constraint"
+    blendMatrixNode = pm.createNode("blendMatrix", name=f"{nodePreffix}blendMatrix{nodeSuffix}", skipSelect=True)
+    multMatrixNode = pm.createNode("multMatrix", name=f"{nodePreffix}multMatrix{nodeSuffix}", skipSelect=True)
+    
+    if maintainOffset:
+        # Set the offset matrix to the multMatrix node
+        multMatrixNode.matrixIn[0].set(driven.worldMatrix.get() * drivers[0].worldInverseMatrix.get())
+        blendMatrixNode.outputMatrix >> multMatrixNode.matrixIn[1]
+        drivenParent.worldInverseMatrix >> multMatrixNode.matrixIn[2]
+        zeroOutLocalOffset = True
+    else:
+        blendMatrixNode.outputMatrix >> multMatrixNode.matrixIn[0]
+        drivenParent.worldInverseMatrix >> multMatrixNode.matrixIn[1]
+    
+    drivenParent.worldMatrix >> blendMatrixNode.inputMatrix
+    for index, driver in enumerate(drivers):
+        driver.worldMatrix >> blendMatrixNode.target[index].targetMatrix
+        blendMatrixNode.target[index].translateWeight.set(translate)
+        blendMatrixNode.target[index].rotateWeight.set(rotate)
+        blendMatrixNode.target[index].scaleWeight.set(scale)
+    
+    multMatrixNode.matrixSum >> driven.offsetParentMatrix
+    
+    # Zero out and lock the attr to avoid unexpected behavior
+    if zeroOutLocalOffset:
+        driven.translate.set(0, 0, 0)
+        driven.rotate.set(0, 0, 0)
+        driven.scale.set(1, 1, 1)
+    driven.translate.lock()
+    driven.rotate.lock()
+    driven.scale.lock()
+    
+    return blendMatrixNode
 ```
